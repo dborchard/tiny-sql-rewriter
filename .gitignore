@@ -1,0 +1,14 @@
+bin/
+release/
+test/tmp/
+doc/blueprint/
+*.iml
+*.swp
+*.log
+coverage.*
+y.output
+
+.DS_Store
+.vscode/
+.idea
+_tools/
