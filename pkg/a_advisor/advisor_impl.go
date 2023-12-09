@@ -1,7 +1,6 @@
 package advisor
 
 import (
-	"tiny_rewriter/ast"
 	"vitess.io/vitess/go/vt/sqlparser"
 )
 
@@ -13,7 +12,7 @@ func (q *Query4Audit) RuleOK() Rule {
 // RuleImplicitAlias ALI.001
 func (q *Query4Audit) RuleImplicitAlias() Rule {
 	var rule = q.RuleOK()
-	tkns := ast.Tokenizer(q.Query)
+	tkns := Tokenizer(q.Query)
 	if len(tkns) == 0 {
 		return rule
 	}

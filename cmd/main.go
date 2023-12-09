@@ -1,39 +1,36 @@
 package main
 
 import (
-	"tiny_rewriter/advisor"
+	"fmt"
+	"strings"
+	advisor "tiny_rewriter/pkg/a_advisor"
+	rewrite "tiny_rewriter/pkg/b_rewriter"
+	env "tiny_rewriter/pkg/d_db_api"
 )
 
 func main() {
 	sql := "select * from t where id = 1"
-	q, syntaxErr := advisor.NewQuery4Audit(sql)
-	if syntaxErr != nil {
-		panic(syntaxErr)
-	}
 
-	heuristicSuggest := make(map[string]advisor.Rule)
+	// 1. suggest optimizations
+	heuristicSuggest := suggestOptimizations(sql)
+	fmt.Println(heuristicSuggest)
 
-	for item, rule := range advisor.HeuristicRules {
-		okFunc := (*advisor.Query4Audit).RuleOK
+	// 2. rewrite sql
+	newSql := rewriteSql(sql)
+	fmt.Println(newSql)
+}
 
-		heuristicFn := rule.Func
-		if &heuristicFn != &okFunc {
-			// NOTE: This is the key point of this snippet.
-			//By calling r := heuristicFn(q), you're invoking the function with q as its receiver.
-			//This means that if heuristicFn is set to (*Query4Audit).RuleImplicitAlias, then heuristicFn(q) is equivalent to q.RuleImplicitAlias().
-			r := heuristicFn(q)
+func suggestOptimizations(sql string) map[string]advisor.Rule {
+	q, _ := advisor.NewQuery4Audit(sql)
+	return q.Advise()
+}
 
-			if r.Item == item {
-				heuristicSuggest[item] = r
-			}
-		}
-	}
+func rewriteSql(sql string) string {
+	//Environment initialization, connection check online environment + build test environment
+	vEnv, _ := env.BuildEnv()
 
-	//rw := ast.NewRewrite(sql)
-	//meta := ast.GetMeta(rw.Stmt, nil)
-	//rw.Columns = vEnv.GenTableColumns(meta)
-	//// 执行定义好的 SQL 重写规则
-	//rw.Rewrite()
-	//fmt.Println(strings.TrimSpace(rw.NewSQL))
-
+	rw := rewrite.NewRewrite(sql)
+	rw.Columns = vEnv.GenTableColumns(rewrite.GetMeta(rw.Stmt, nil))
+	rw.Rewrite()
+	return strings.TrimSpace(rw.NewSQL)
 }

@@ -1,11 +1,11 @@
-package ast
+package advisor
 
 import (
 	"fmt"
 	"vitess.io/vitess/go/vt/sqlparser"
 )
 
-// Token 基本定义
+// Token basic definition
 type Token struct {
 	Type int
 	Val  string
