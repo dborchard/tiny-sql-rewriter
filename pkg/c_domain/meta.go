@@ -1,4 +1,4 @@
-package common
+package domain
 
 // Meta With 'database' as key, DB map, metadata organized by db->table->column
 type Meta map[string]*DB

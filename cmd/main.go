@@ -5,7 +5,7 @@ import (
 	"strings"
 	advisor "tiny_rewriter/pkg/a_advisor"
 	rewrite "tiny_rewriter/pkg/b_rewriter"
-	env "tiny_rewriter/pkg/d_db_api"
+	env "tiny_rewriter/pkg/d_catalog"
 )
 
 func main() {

@@ -8,10 +8,10 @@ import (
 // GetMeta gets metadata information and builds it to the db->table level.
 // Get table information from SQL or Statement and return it. When meta is not nil,
 // the return value will merge the old and new meta to remove duplicates.
-func GetMeta(stmt sqlparser.Statement, meta common.Meta) common.Meta {
+func GetMeta(stmt sqlparser.Statement, meta domain.Meta) domain.Meta {
 	// 初始化meta
 	if meta == nil {
-		meta = make(map[string]*common.DB)
+		meta = make(map[string]*domain.DB)
 	}
 
 	err := sqlparser.Walk(func(node sqlparser.SQLNode) (kontinue bool, err error) {
@@ -49,14 +49,14 @@ func GetMeta(stmt sqlparser.Statement, meta common.Meta) common.Meta {
 				// The final result is that all subquery aliases will be attributed to the "" (empty) database "" (empty) table.
 				// For an empty database, the empty table will be directly PASSed during index optimization.
 				if meta == nil {
-					meta = make(map[string]*common.DB)
+					meta = make(map[string]*domain.DB)
 				}
 
 				if meta[""] == nil {
-					meta[""] = common.NewDB("")
+					meta[""] = domain.NewDB("")
 				}
 
-				meta[""].Table[""] = common.NewTable("")
+				meta[""].Table[""] = domain.NewTable("")
 				meta[""].Table[""].TableAliases = append(meta[""].Table[""].TableAliases, expr.As.String())
 			}
 		}
@@ -72,7 +72,7 @@ func GetMeta(stmt sqlparser.Statement, meta common.Meta) common.Meta {
 // @tb is the sqlparser.TableName object
 // @as is the alias of the table, empty if there is no alias
 // @meta is the information collection
-func appendTable(tb sqlparser.TableName, as string, meta map[string]*common.DB) map[string]*common.DB {
+func appendTable(tb sqlparser.TableName, as string, meta map[string]*domain.DB) map[string]*domain.DB {
 	if meta == nil {
 		return meta
 	}
@@ -84,17 +84,17 @@ func appendTable(tb sqlparser.TableName, as string, meta map[string]*common.DB) 
 	}
 
 	if meta[dbName] == nil {
-		meta[dbName] = common.NewDB(dbName)
+		meta[dbName] = domain.NewDB(dbName)
 	}
 
-	meta[dbName].Table[tbName] = common.NewTable(tbName)
+	meta[dbName].Table[tbName] = domain.NewTable(tbName)
 	mergeAlias(dbName, tbName, as, meta)
 
 	return meta
 }
 
 // mergeAlias merge all table aliases into one table
-func mergeAlias(db, tb, as string, meta map[string]*common.DB) {
+func mergeAlias(db, tb, as string, meta map[string]*domain.DB) {
 	if meta == nil || as == "" {
 		return
 	}

@@ -2,8 +2,8 @@ package env
 
 import (
 	"strings"
-	"tiny_rewriter/pkg/c_domain"
-	database "tiny_rewriter/pkg/e_db_impl_mysql"
+	domain "tiny_rewriter/pkg/c_domain"
+	database "tiny_rewriter/pkg/e_catalog_mysql"
 )
 
 // VirtualEnv SQL optimization review test environment
@@ -41,8 +41,8 @@ func NewVirtualEnv(vEnv *database.Connector) *VirtualEnv {
 }
 
 // GenTableColumns Initialization of the structure provided for Rewrite
-func (vEnv *VirtualEnv) GenTableColumns(meta common.Meta) common.TableColumns {
-	tableColumns := make(common.TableColumns)
+func (vEnv *VirtualEnv) GenTableColumns(meta domain.Meta) domain.TableColumns {
+	tableColumns := make(domain.TableColumns)
 	for dbName, db := range meta {
 		for _, tb := range db.Table {
 			// prevent unexpected values from being passed in
@@ -60,11 +60,11 @@ func (vEnv *VirtualEnv) GenTableColumns(meta common.Meta) common.TableColumns {
 			}
 
 			if _, ok := tableColumns[dbName]; !ok {
-				tableColumns[dbName] = make(map[string][]*common.Column)
+				tableColumns[dbName] = make(map[string][]*domain.Column)
 			}
 
 			if _, ok := tableColumns[dbName][tb.TableName]; !ok {
-				tableColumns[dbName][tb.TableName] = make([]*common.Column, 0)
+				tableColumns[dbName][tb.TableName] = make([]*domain.Column, 0)
 			}
 
 			if len(tb.Column) == 0 {
@@ -74,7 +74,7 @@ func (vEnv *VirtualEnv) GenTableColumns(meta common.Meta) common.TableColumns {
 				}
 
 				for _, colInfo := range td.DescValues {
-					tableColumns[dbName][tb.TableName] = append(tableColumns[dbName][tb.TableName], &common.Column{
+					tableColumns[dbName][tb.TableName] = append(tableColumns[dbName][tb.TableName], &domain.Column{
 						Name:       colInfo.Field,
 						DB:         dbName,
 						Table:      tb.TableName,
@@ -89,12 +89,12 @@ func (vEnv *VirtualEnv) GenTableColumns(meta common.Meta) common.TableColumns {
 					})
 				}
 			} else {
-				// tb.column如果不为空则需要把使用到的列填写进去
-				var columns []*common.Column
+				// tb.column If it is not empty, you need to fill in the columns used.
+				var columns []*domain.Column
 				for _, col := range tb.Column {
 					for _, colInfo := range td.DescValues {
 						if col.Name == colInfo.Field {
-							// 根据获取的信息将列的信息补全
+							// Complete the column information based on the obtained information
 							col.DB = dbName
 							col.Table = tb.TableName
 							col.DataType = colInfo.Type
