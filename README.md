@@ -9,5 +9,5 @@ This project is based out of [XiaoMi Soar](https://github.com/XiaoMi/soar.git)
  [here](https://github.com/XiaoMi/soar/blob/fab04633b12ba1e4f35456112360150a6d0d1421/ast/rewrite.go#L47)
 - Domain: Contains domain object required by rewriter to interface with underlying database to fetch details like table
  schema, indexes, column names etc.
-- DB API: Contains API interface to interact with underlying database.
-- DB Impl MySQL: Contains implementation of DB API for MySQL database.
+- Catalog API: Contains API interface to interact with underlying database.
+- Catalog MySQL: Contains implementation of Catalog API for MySQL database.
