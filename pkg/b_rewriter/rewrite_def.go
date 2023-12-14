@@ -16,21 +16,21 @@ func init() {
 	RewriteRules = []Rule{
 		{
 			Name:        "star2columns",
-			Description: "为SELECT *补全表的列信息",
+			Description: "complete table column information for select",
 			Original:    "SELECT * FROM film",
 			Suggest:     "select film.film_id, film.title from film",
 			Func:        (*Rewrite).RewriteStar2Columns,
 		},
 		{
 			Name:        "orderbynull",
-			Description: "如果 GROUP BY 语句不指定 ORDER BY 条件会导致无谓的排序产生，如果不需要排序建议添加 ORDER BY NULL",
+			Description: "If the GROUP BY statement does not specify the ORDER BY condition, it will cause unnecessary sorting. If sorting is not required, it is recommended to add ORDER BY NULL.",
 			Original:    "SELECT sum(col1) FROM tbl GROUP BY col",
 			Suggest:     "select sum(col1) from tbl group by col order by null",
 			Func:        (*Rewrite).RewriteAddOrderByNull,
 		},
 		{
 			Name:        "dmlorderby",
-			Description: "删除 DML 更新操作中无意义的 ORDER BY",
+			Description: "Remove meaningless ORDER BY in DML update operations",
 			Original:    "DELETE FROM tbl WHERE col1=1 ORDER BY col",
 			Suggest:     "delete from tbl where col1 = 1",
 			Func:        (*Rewrite).RewriteRemoveDMLOrderBy,

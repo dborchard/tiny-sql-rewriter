@@ -9,7 +9,7 @@ import (
 // Get table information from SQL or Statement and return it. When meta is not nil,
 // the return value will merge the old and new meta to remove duplicates.
 func GetMeta(stmt sqlparser.Statement, meta domain.Meta) domain.Meta {
-	// 初始化meta
+	// initialize meta
 	if meta == nil {
 		meta = make(map[string]*domain.DB)
 	}
