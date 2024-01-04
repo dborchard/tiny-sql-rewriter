@@ -11,3 +11,6 @@ This project is based out of [XiaoMi Soar](https://github.com/XiaoMi/soar.git)
  schema, indexes, column names etc.
 - Catalog API: Contains API interface to interact with underlying database.
 - Catalog MySQL: Contains implementation of Catalog API for MySQL database.
+
+### How to run
+Run [main.go](cmd/main.go) file.
