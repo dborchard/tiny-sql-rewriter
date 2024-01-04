@@ -6,6 +6,7 @@ import (
 	tidb "github.com/pingcap/parser/ast"
 	"vitess.io/vitess/go/vt/sqlparser"
 )
+import _ "github.com/pingcap/tidb/types/parser_driver"
 
 // Query4Audit The SQL structure to be reviewed consists of the original SQL and its corresponding abstract syntax tree
 type Query4Audit struct {
