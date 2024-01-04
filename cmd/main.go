@@ -35,9 +35,9 @@ func suggestOptimizations(sql string) map[string]advisor.Rule {
 }
 
 func rewriteSql(sql string) string {
-
 	rw := rewrite.NewRewrite(sql)
 
+	// TODO: populate columns. For now, we use mock data.
 	vEnv, _ := env.BuildEnv() //Environment initialization, connection check online environment + build test environment
 	//rw.Columns = vEnv.GenTableColumns(rewrite.GetMeta(rw.Stmt, nil)) // Get the table structure of the test environment
 	rw.Columns = vEnv.GenTableColumnsMock(rewrite.GetMeta(rw.Stmt, nil))
