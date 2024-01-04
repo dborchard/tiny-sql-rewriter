@@ -24,6 +24,9 @@ func main() {
 	// 2. rewrite sql
 	newSql := rewriteSql(sql)
 	fmt.Println(newSql)
+	/*
+		select id, name from tbl as t1 where id < 1000
+	*/
 }
 
 func suggestOptimizations(sql string) map[string]advisor.Rule {
@@ -36,7 +39,7 @@ func rewriteSql(sql string) string {
 	vEnv, _ := env.BuildEnv()
 
 	rw := rewrite.NewRewrite(sql)
-	rw.Columns = vEnv.GenTableColumns(rewrite.GetMeta(rw.Stmt, nil))
+	rw.Columns = vEnv.GenTableColumnsMock(rewrite.GetMeta(rw.Stmt, nil))
 	rw.Rewrite()
 	return strings.TrimSpace(rw.NewSQL)
 }

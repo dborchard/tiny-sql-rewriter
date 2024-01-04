@@ -129,3 +129,44 @@ func (vEnv *VirtualEnv) RealDB(hash string) string {
 	}
 	return hash
 }
+
+func (vEnv *VirtualEnv) GenTableColumnsMock(meta domain.Meta) domain.TableColumns {
+	dbName := "a"
+	tblName := "tbl"
+
+	tableColumns := make(domain.TableColumns)
+	if _, ok := tableColumns[dbName]; !ok {
+		tableColumns[dbName] = make(map[string][]*domain.Column)
+	}
+
+	var columns []*domain.Column
+	columns = append(columns, &domain.Column{
+		Name:       "id",
+		DB:         dbName,
+		Table:      tblName,
+		DataType:   "varchar",
+		Character:  "utf8",
+		Key:        "PRI",
+		Default:    "",
+		Extra:      "",
+		Comment:    "",
+		Privileges: "",
+		Null:       "",
+	})
+	columns = append(columns, &domain.Column{
+		Name:       "name",
+		DB:         dbName,
+		Table:      tblName,
+		DataType:   "int",
+		Character:  "utf8",
+		Default:    "",
+		Extra:      "",
+		Comment:    "",
+		Privileges: "",
+		Null:       "",
+	})
+
+	tableColumns[dbName][tblName] = columns
+
+	return tableColumns
+}
