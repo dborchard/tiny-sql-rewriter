@@ -16,9 +16,11 @@ func main() {
 	fmt.Println(heuristicSuggest)
 	/*
 		map[
-			ALI.001: {ALI.001 L0 It is recommended to use the AS keyword to explicitly declare an alias In column or table aliases (such as "tbl AS alias"), explicit use of the AS keyword is more understandable than implicit aliases (such as "tbl alias").  select name from tbl t1 where id < 1000 0 0x10327f9e0}
+			ALI.001: {ALI.001 L0 It is recommended to use the AS keyword ...}
 			OK: {OK L0 OK OK OK 0 0x10327f920}
 		]
+		NOTE:
+		1. ALI.001 is added by the advisor rule "RuleImplicitAlias".
 	*/
 
 	// 2. rewrite sql
@@ -26,6 +28,10 @@ func main() {
 	fmt.Println(newSql)
 	/*
 		select id, name from tbl as t1 where id < 1000
+
+		NOTE:
+		1. tbl as t1 is done by `sqlparser.String(rw.Stmt)`. It is not part of the rewrite rules.
+		2. id, name is added by the rewrite rule "RewriteStar2Columns".
 	*/
 }
 
